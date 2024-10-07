@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	position: relative;
+	font-family: Verdana, Tahoma, sans-serif;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:enabled,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:enabled,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:enabled,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+	-webkit-text-fill-color: rgb(0, 0, 0);
+	-webkit-box-shadow: 0 0 0px 1000px rgb(255, 255, 255) inset;
+	box-shadow: 0 0 0px 1000px rgb(245, 255, 255) inset;
+	background-color: rgb(255, 255, 255);
+}
