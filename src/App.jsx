@@ -35,6 +35,7 @@ function App() {
 		getUserData()
 	}, [token])
 
+	// return main routes of app
 	return (
 		<>
 			<Routes>

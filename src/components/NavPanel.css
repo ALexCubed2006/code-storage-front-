@@ -4,3 +4,7 @@
 .icon-size i:hover::before{
     font-size: 24px;
 }
+
+.icon-size-big i::before {
+    font-size: 36px;
+}

@@ -1,8 +1,9 @@
 import axios from 'axios'
 import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { setToken } from '../redux/authSlice'
+import AppLink from '../shared/AppLink'
 
 export default function AuthForm({ type }) {
 	const email = useRef(null)
@@ -42,9 +43,26 @@ export default function AuthForm({ type }) {
 	return (
 		<main className='flex w-full h-[100vh] justify-center items-center box-border'>
 			<div className='flex flex-col items-center w-[500px] h-[550px] m-auto border border-zinc-900 rounded-xl absolute'>
-				<h1 className='p-6'>
-					{type === 'login' ? 'Login Form' : 'Register Form'}
-				</h1>
+				<Link to='/' className='fixed left-[220px]'>
+					<i className='fi fi-bs-home w-[48px] h-[48px] flex items-center justify-center' />
+				</Link>
+				<div className='p-6 flex items-center justify-center'>
+					{type === 'register' && (
+						<AppLink authType={'redirectLogin'} className='mr-2' title='Login'>
+							<i className='fi fi-bs-angle-left' />
+						</AppLink>
+					)}
+					<span>{type === 'register' ? 'Register' : 'Login'}</span>
+					{type === 'login' && (
+						<AppLink
+							authType={'redirectRegister'}
+							className='ml-2'
+							title='Register'
+						>
+							<i className='fi fi-bs-angle-right' />
+						</AppLink>
+					)}
+				</div>
 
 				<div className='flex flex-col grow p-4 justify-around items-center m-auto my-10 mb-20'>
 					<input

@@ -1,7 +1,9 @@
+import NavPanel from '../components/NavPanel'
+
 export default function HomePage() {
 	return (
 		<div>
-			<h1>HomePage</h1>
+			<NavPanel />
 		</div>
 	)
 }

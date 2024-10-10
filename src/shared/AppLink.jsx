@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
-export default function AppLink({ children, authType, className }) {
+export default function AppLink({ children, authType, className, title }) {
 	const navigate = useNavigate()
 
 	// check if user is logged in
@@ -15,7 +15,7 @@ export default function AppLink({ children, authType, className }) {
 				},
 			},
 		)
-		
+
 		// redirect to route, which path comes from server response
 		if (response.data.navigate) {
 			navigate(response.data.navigate)
@@ -24,5 +24,9 @@ export default function AppLink({ children, authType, className }) {
 		}
 	}
 
-	return <button onClick={loginCheck} className={className}>{children}</button>
+	return (
+		<button onClick={loginCheck} className={className}>
+			{children}
+		</button>
+	)
 }
