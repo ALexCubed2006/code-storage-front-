@@ -1,28 +1,40 @@
 import axios from 'axios'
 import { useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { setToken } from '../redux/authSlice'
 
 export default function AuthForm({ type }) {
 	const email = useRef(null)
 	const password = useRef(null)
 	const name = useRef(null)
+	const navigate = useNavigate()
+	const dispatch = useDispatch()
 
-	// const token = localStorage.getItem('token')
-	// const navigate = useNavigate()
-	// useEffect(() => {
-	// 	if (token) {
-	// 		navigate('/')
-	// 	}
-	// }, [navigate, token])
+	// if you already have token
+	// you will be redirected
+	// to main page
 
-	const login = async ( email, password, name ) => {
+	const token = localStorage.getItem('token')
+	useEffect(() => {
+		if (token) {
+			navigate('/')
+		}
+	}, [navigate, token])
+
+	// login
+	// then set token in redux store
+	// and redirect to main page
+	const login = async (email, password, name = null) => {
 		const res = await axios.post(`http://localhost:3456/api/auth/${type}`, {
-			name: name.current?.value ?? null,
 			email: email.current.value,
 			password: password.current.value,
+			name,
 		})
+
 		localStorage.setItem('token', res.data.token)
 		if (res.data.token) {
+			dispatch(setToken({ token: res.data.token }))
 			navigate('/')
 		}
 	}
