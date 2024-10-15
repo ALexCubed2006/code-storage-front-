@@ -6,7 +6,7 @@ import './App.css'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import StartPage from './pages/StartPage'
-import { setUserData } from './redux/authSlice'
+import { logOut, setUserData } from './redux/authSlice'
 
 function App() {
 	const dispatch = useDispatch()
@@ -26,10 +26,18 @@ function App() {
 					},
 				},
 			)
-			const { name, email } = res.data
+
+			if (res.data?.error) {
+				console.warn(res.data.error)
+				localStorage.removeItem('token')
+				dispatch(logOut())
+				return null
+			}
+
+			const { name, email, role, groupRole } = res.data
 
 			if (name && email) {
-				dispatch(setUserData({ name, email }))
+				dispatch(setUserData({ name, email, role, groupRole }))
 			}
 		}
 		getUserData()

@@ -27,25 +27,37 @@ export default function AuthForm({ type }) {
 	// then set token in redux store
 	// and redirect to main page
 	const login = async (email, password, name = null) => {
+		console.log(email, password, name)
 		const res = await axios.post(`http://localhost:3456/api/auth/${type}`, {
-			email: email.current.value,
-			password: password.current.value,
-			name,
-		})
+			email,
+			password,
+			name,	
+		})		
+		if(res.data?.error) {
+			console.warn(res.data.error)
+		}
 
-		localStorage.setItem('token', res.data.token)
 		if (res.data.token) {
+			localStorage.setItem('token', res.data.token)
 			dispatch(setToken({ token: res.data.token }))
 			navigate('/')
 		}
+
+		email = null
+		password = null
+		name = null
 	}
 
 	return (
 		<main className='flex w-full h-[100vh] justify-center items-center box-border'>
-			<div className='flex flex-col items-center w-[500px] h-[550px] m-auto border border-zinc-900 rounded-xl absolute'>
-				<Link to='/' className='fixed left-[220px]'>
+			<div className='flex flex-col items-center w-[500px] h-[550px] m-auto border border-zinc-500 rounded-xl absolute'>
+
+				{/* Link to start page */}
+				<Link to='/' className='fixed left-4 top-4 border border-zinc-500 rounded-lg [&>*::before]:text-[24px]'>
 					<i className='fi fi-bs-home w-[48px] h-[48px] flex items-center justify-center' />
 				</Link>
+
+				{/* Header of form and links for another form (register or login) */}
 				<div className='p-6 flex items-center justify-center'>
 					{type === 'register' && (
 						<AppLink authType={'redirectLogin'} className='mr-2' title='Login'>
@@ -64,12 +76,13 @@ export default function AuthForm({ type }) {
 					)}
 				</div>
 
+				{/* Form */}
 				<div className='flex flex-col grow p-4 justify-around items-center m-auto my-10 mb-20'>
 					<input
 						type='email'
 						ref={email}
 						id='email'
-						className='border-b-2 border-zinc-500 transition-[border] duration-300 hover:border-zinc-900 p-1 m-2 focus:outline-none'
+						className='border-b-2 border-zinc-500 transition-[border] duration-300 hover:border-zinc-500 p-1 m-2 focus:outline-none'
 						placeholder='email'
 					/>
 					{type === 'register' && (
@@ -77,7 +90,7 @@ export default function AuthForm({ type }) {
 							type='text'
 							ref={name}
 							id='name'
-							className='border-b-2 border-zinc-500 transition-[border] duration-300 hover:border-zinc-900 p-1 m-2 focus:outline-none'
+							className='border-b-2 border-zinc-500 transition-[border] duration-300 hover:border-zinc-500 p-1 m-2 focus:outline-none'
 							placeholder='name'
 						/>
 					)}
@@ -86,21 +99,23 @@ export default function AuthForm({ type }) {
 						type='password'
 						ref={password}
 						id='password'
-						className='border-b-2 border-zinc-500 transition-[border] duration-300 hover:border-zinc-900 p-1 m-2 focus:outline-none'
+						className='border-b-2 border-zinc-500 transition-[border] duration-300 hover:border-zinc-500 p-1 m-2 focus:outline-none'
 						placeholder='password'
 					/>
 				</div>
+
+				{/* Submit button */}
 				{type === 'login' ? (
 					<button
 						onClick={() => login(email, password)}
-						className='border-b-2 border-zinc-500 transition-[border] duration-300 hover:border-zinc-900 p-1 m-2 focus:outline-none'
+						className='border-b-2 border-zinc-500 transition-[border] duration-300 hover:border-zinc-500 p-1 m-2 focus:outline-none'
 					>
 						Login
 					</button>
 				) : (
 					<button
-						onClick={() => login(email, password, name)}
-						className='border-b-2 border-zinc-500 transition-[border] duration-300 hover:border-zinc-900 p-1 m-2 focus:outline-none'
+						onClick={() => login(email.current.value, password.current.value, name.current.value)}
+						className='border-b-2 border-zinc-500 transition-[border] duration-300 hover:border-zinc-500 p-1 m-2 focus:outline-none'
 					>
 						Register
 					</button>
