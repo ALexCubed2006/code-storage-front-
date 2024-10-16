@@ -49,7 +49,7 @@ export default function AuthForm({ type }) {
 	}
 
 	return (
-		<main className='flex w-full h-[100vh] justify-center items-center box-border'>
+		<div className='flex w-full h-[100vh] justify-center items-center box-border'>
 			<div className='flex flex-col items-center w-[500px] h-[550px] m-auto border border-zinc-500 rounded-xl absolute'>
 
 				{/* Link to start page */}
@@ -121,6 +121,6 @@ export default function AuthForm({ type }) {
 					</button>
 				)}
 			</div>
-		</main>
+		</div>
 	)
 }

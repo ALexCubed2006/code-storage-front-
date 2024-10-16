@@ -4,7 +4,7 @@ import './NavPanel.css'
 
 export default function NavPanel() {
 	return (
-		<div className='w-full h-[75px] border-b border-zinc-500 flex absolute'>
+		<div className='w-full h-[75px] border-b border-zinc-500 flex'>
 
 			<div className='w-auto h-16 m-auto flex items-center justify-center icon-size-big'>
 				<i className='fi fi-bs-shopping-bag w-16 h-16 flex items-center justify-center' />

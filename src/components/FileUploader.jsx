@@ -55,7 +55,7 @@ export default function FileUploader() {
 		return null
 	}
 	return (
-		<div>
+		<div className='w-full h-full flex flex-col items-center justify-center'>
 			{/*<button onClick={handleUpload}>Upload</button>*/}
 			<input
 				type='file'
