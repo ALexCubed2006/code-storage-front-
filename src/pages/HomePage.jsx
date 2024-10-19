@@ -3,7 +3,7 @@ import NavPanel from '../components/NavPanel/NavPanel'
 
 export default function HomePage() {
 	return (
-		<div>
+		<div className='h-[100vh] w-full flex flex-col'>
 			<NavPanel />
 
 			<FileUploader />

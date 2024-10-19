@@ -27,13 +27,12 @@ export default function AuthForm({ type }) {
 	// then set token in redux store
 	// and redirect to main page
 	const login = async (email, password, name = null) => {
-		console.log(email, password, name)
 		const res = await axios.post(`http://localhost:3456/api/auth/${type}`, {
 			email,
 			password,
-			name,	
-		})		
-		if(res.data?.error) {
+			name,
+		})
+		if (res.data?.error) {
 			console.warn(res.data.error)
 		}
 
@@ -51,9 +50,11 @@ export default function AuthForm({ type }) {
 	return (
 		<div className='flex w-full h-[100vh] justify-center items-center box-border'>
 			<div className='flex flex-col items-center w-[500px] h-[550px] m-auto border border-zinc-500 rounded-xl absolute'>
-
 				{/* Link to start page */}
-				<Link to='/' className='fixed left-4 top-4 border border-zinc-500 rounded-lg [&>*::before]:text-[24px]'>
+				<Link
+					to='/'
+					className='fixed left-4 top-4 border border-zinc-500 rounded-lg [&>*::before]:text-[24px]'
+				>
 					<i className='fi fi-bs-home w-[48px] h-[48px] flex items-center justify-center' />
 				</Link>
 
@@ -107,14 +108,20 @@ export default function AuthForm({ type }) {
 				{/* Submit button */}
 				{type === 'login' ? (
 					<button
-						onClick={() => login(email, password)}
+						onClick={() => login(email.current.value, password.current.value)}
 						className='border-b-2 border-zinc-500 transition-[border] duration-300 hover:border-zinc-500 p-1 m-2 focus:outline-none'
 					>
 						Login
 					</button>
 				) : (
 					<button
-						onClick={() => login(email.current.value, password.current.value, name.current.value)}
+						onClick={() =>
+							login(
+								email.current.value,
+								password.current.value,
+								name.current.value,
+							)
+						}
 						className='border-b-2 border-zinc-500 transition-[border] duration-300 hover:border-zinc-500 p-1 m-2 focus:outline-none'
 					>
 						Register

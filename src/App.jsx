@@ -6,14 +6,14 @@ import './App.css'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import StartPage from './pages/StartPage'
-import { logOut, setUserData } from './redux/authSlice'
+import { logOut, setUserData, setUserFiles } from './redux/authSlice'
 
 function App() {
 	const dispatch = useDispatch()
 	const token = useSelector((state) => state.auth.token)
 
 	// что использовать?
-	// useLayoutEffect или useEffect?
+	// FIXME: useLayoutEffect или useEffect?
 	useLayoutEffect(() => {
 		// get user data and set it in redux store
 		async function getUserData() {
@@ -39,6 +39,13 @@ function App() {
 			if (name && email) {
 				dispatch(setUserData({ name, email, role, groupRole }))
 			}
+			const files = await axios.get('http://localhost:3456/api/upload/getUserFiles', {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				},
+			})
+			dispatch(setUserFiles({ files: files.data }))
+
 		}
 		getUserData()
 	}, [token])
