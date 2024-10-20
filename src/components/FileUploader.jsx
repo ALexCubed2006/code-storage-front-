@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setUploadFile } from '../redux/authSlice'
-import FileComponent from './FileComponent'
+import Button from '../shared/Button'
+import FileComponent from '../shared/FileComponent'
 
 export default function FileUploader() {
 	const acceptedFiles = [
@@ -27,6 +28,7 @@ export default function FileUploader() {
 	const [uploadedFile, setUploadedFile] = useState(null)
 	const [drug, setDrug] = useState(false)
 	const inputRef = useRef(null)
+
 	const dispatch = useDispatch()
 
 	function handleChange(e) {
@@ -88,15 +90,15 @@ export default function FileUploader() {
 	}
 
 	return (
-		<div className='w-full h-full flex items-center justify-center'>
+		<div className='flex items-center justify-center bg-white rounded-2xl'>
 			<div className='m-auto p-6 border border-zinc-500 rounded-2xl flex w-[800px] h-[600px]'>
 				<div className='flex flex-col items-center pr-4'>
-					<button
+					<Button
 						onClick={() => inputRef.current.click()}
 						className='m-2 p-2 border-2 border-zinc-500 rounded-lg'
 					>
 						Select file
-					</button>
+					</Button>
 					<input
 						type='file'
 						multiple
@@ -105,12 +107,18 @@ export default function FileUploader() {
 						ref={inputRef}
 						className='m-0 p-0 w-0 h-0 overflow-hidden opacity-0'
 					/>
-					<button
+					<Button
+						onClick={clearSelectedFile}
+						className='m-2 p-2 border-2 border-zinc-500 rounded-lg'
+					>
+						Clear
+					</Button>
+					<Button
 						onClick={handleUpload}
 						className='m-2 p-2 border-2 border-zinc-500 rounded-lg'
 					>
 						Upload
-					</button>
+					</Button>
 				</div>
 
 				{drug ? (
@@ -143,5 +151,4 @@ export default function FileUploader() {
 				)}
 			</div>
 		</div>
-	)
-}
+	)}
