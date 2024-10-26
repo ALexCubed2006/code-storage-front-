@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-import authSlice from './authSlice'
-import menuSlice from './menuSlice'
+import authSlice from './auth.slice'
+import fileSlice from './file.slice'
 
 const reducer = {
 	auth: authSlice,
-	menu: menuSlice,
+	file: fileSlice,
 }
 
 export default configureStore({

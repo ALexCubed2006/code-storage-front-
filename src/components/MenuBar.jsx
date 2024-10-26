@@ -1,27 +1,8 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { toggleModal } from '../redux/menuSlice'
-import Button from '../shared/Button'
-import FileUploader from './FileUploader'
-import Modal from '../shared/Modal'
-
-export default function MenuBar({ isMenuOpen }) {
-	const dispatch = useDispatch()
-	const isModalOpen = useSelector((state) => state.menu.isModalOpen)
-	function openModal() {
-		dispatch(toggleModal())
-	}
+export default function MenuBar({ children }) {
 	return (
-		<>
-			{isMenuOpen && (
-				<div className='border-l-2 border-zinc-300 w-1/6 h-full flex flex-col p-2'>
-					<Button onClick={openModal}>Send File</Button>
-					<Modal isModalOpen={isModalOpen} onClose={openModal}>
-						<FileUploader />
-					</Modal>
-
-					<Button onClick={() => {}}>Community</Button>
-				</div>
-			)}
-		</>
+		<div className='p-2 w-1/6 h-[calc(100vh-75px)] bg-white border-l-2 border-zinc-500 absolute right-0 top-[75px] z-50 overflow-y-auto'>
+			{/* TODO: add animation */}
+			{children}
+		</div>
 	)
 }

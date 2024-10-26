@@ -6,7 +6,7 @@ const initialState = {
 	role: 'GUEST',
 	groupRole: null,
 	token: localStorage.getItem('token'),
-	files: [],
+	fileIds: [],
 }
 
 export const authSlice = createSlice({
@@ -22,11 +22,11 @@ export const authSlice = createSlice({
 		},
 
 		// setting user files
-		setUserFiles: (state, action) => {
-			state.files = action.payload.files
+		setUserFilesId: (state, action) => {
+			state.fileIds = action.payload.files.map((file) => file.id)
 		},
-		setUploadFile: (state, action) => {
-			state.files.push(action.payload.file)
+		setUploadFileId: (state, action) => {
+			state.fileIds.push(action.payload.file.id)
 		},
 
 		// setting token in redux store
@@ -43,6 +43,12 @@ export const authSlice = createSlice({
 })
 
 // actions
-export const { setUserData, setUserFiles, setUploadFile, setToken, logOut } = authSlice.actions
+export const {
+	setUserData,
+	setUserFilesId,
+	setUploadFileId,
+	setToken,
+	logOut,
+} = authSlice.actions
 
 export default authSlice.reducer

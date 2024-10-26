@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { setUploadFile } from '../redux/authSlice'
 import Button from '../shared/Button'
-import FileComponent from '../shared/FileComponent'
+import FileImg from '../shared/FileImg'
 
 export default function FileUploader() {
 	const acceptedFiles = [
@@ -121,6 +121,7 @@ export default function FileUploader() {
 					</Button>
 				</div>
 
+				{/* TODO: refactor */}
 				{drug ? (
 					<div
 						onDragStart={(e) => dragStartHandler(e)}
@@ -133,7 +134,7 @@ export default function FileUploader() {
 							// if file selected
 							// show it in field
 							selectedFile ? (
-								<FileComponent file={selectedFile} />
+								<FileImg file={selectedFile} />
 							) : (
 								<p>Drag and drop your files here</p>
 							)
@@ -151,4 +152,5 @@ export default function FileUploader() {
 				)}
 			</div>
 		</div>
-	)}
+	)
+}

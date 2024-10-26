@@ -6,14 +6,13 @@ import './App.css'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import StartPage from './pages/StartPage'
-import { logOut, setUserData, setUserFiles } from './redux/authSlice'
+import { logOut, setUserData, setUserFilesId } from './redux/auth.slice'
+import { setFiles } from './redux/file.slice'
 
 function App() {
 	const dispatch = useDispatch()
 	const token = useSelector((state) => state.auth.token)
 
-	// что использовать?
-	// FIXME: useLayoutEffect или useEffect?
 	useLayoutEffect(() => {
 		// get user data and set it in redux store
 		async function getUserData() {
@@ -39,18 +38,22 @@ function App() {
 			if (name && email) {
 				dispatch(setUserData({ name, email, role, groupRole }))
 			}
-			const files = await axios.get('http://localhost:3456/api/upload/getUserFiles', {
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem('token')}`,
+			const files = await axios.get(
+				'http://localhost:3456/api/upload/getUserFileIds',
+				{
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem('token')}`,
+					},
 				},
-			})
-			dispatch(setUserFiles({ files: files.data }))
-
+			)
+			dispatch(setUserFilesId({ files: files.data }))
+			dispatch(setFiles({ files: files.data }))
 		}
 		getUserData()
 	}, [token])
 
 	// return main routes of app
+	// TODO: add more routes
 	return (
 		<>
 			<Routes>

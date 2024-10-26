@@ -2,10 +2,11 @@ import axios from 'axios'
 import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { setToken } from '../redux/authSlice'
+import { setToken } from '../redux/auth.slice'
 import AppLink from '../shared/AppLink'
 
 export default function AuthForm({ type }) {
+	// TODO: maybe refactor
 	const email = useRef(null)
 	const password = useRef(null)
 	const name = useRef(null)
@@ -15,13 +16,12 @@ export default function AuthForm({ type }) {
 	// if you already have token
 	// you will be redirected
 	// to main page
-
 	const token = localStorage.getItem('token')
 	useEffect(() => {
 		if (token) {
 			navigate('/')
 		}
-	}, [navigate, token])
+	}, [token])
 
 	// login
 	// then set token in redux store

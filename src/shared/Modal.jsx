@@ -1,4 +1,6 @@
 export default function Modal({ children, isModalOpen, onClose }) {
+	// TODO: add animation
+	// TODO: add close button
 	return (
 		<div
 			className={
