@@ -20,9 +20,12 @@ export const fileSlice = createSlice({
 		setUploadedFile: (state, action) => {
 			state.uploadedFiles.push(action.payload.file)
 		},
+		addUploadedAmount: (state, action) => {
+			state.uploadedAmount += action.payload.amount
+		},
 	},
 })
 
-export const { setFiles, setUploadedFiles, setUploadedFile } = fileSlice.actions
+export const { setFiles, setUploadedFiles, setUploadedFile, addUploadedAmount } = fileSlice.actions
 
 export default fileSlice.reducer

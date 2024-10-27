@@ -1,0 +1,9 @@
+.grid-marking__top-panel {
+    display: grid;
+    grid-template-columns: 20% 60% 20%;
+}
+
+.grid-marking__top-panel--open {
+    display: grid;
+    grid-template-columns: 20% 45% 15% 20%;
+}

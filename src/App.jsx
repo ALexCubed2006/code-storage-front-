@@ -5,11 +5,12 @@ import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
+import ProfilePage from './pages/ProfilePage'
 import StartPage from './pages/StartPage'
 import { logOut, setUserData, setUserFilesId } from './redux/auth.slice'
-import { setFiles } from './redux/file.slice'
 
 function App() {
+	console.log('[App] rendered')
 	const dispatch = useDispatch()
 	const token = useSelector((state) => state.auth.token)
 
@@ -21,7 +22,7 @@ function App() {
 				'http://localhost:3456/api/access/isAuthorized',
 				{
 					headers: {
-						Authorization: `Bearer ${localStorage.getItem('token')}`,
+						Authorization: `Bearer ${token}`,
 					},
 				},
 			)
@@ -42,12 +43,11 @@ function App() {
 				'http://localhost:3456/api/upload/getUserFileIds',
 				{
 					headers: {
-						Authorization: `Bearer ${localStorage.getItem('token')}`,
+						Authorization: `Bearer ${token}`,
 					},
 				},
 			)
 			dispatch(setUserFilesId({ files: files.data }))
-			dispatch(setFiles({ files: files.data }))
 		}
 		getUserData()
 	}, [token])
@@ -59,8 +59,12 @@ function App() {
 			<Routes>
 				<Route path='/' element={<StartPage />} />
 				<Route path='/home' element={<HomePage />} />
+				<Route path='/profile' element={<ProfilePage />} />
 				<Route path='/login' element={<LoginPage type={'login'} />} />
-				<Route path='/register' element={<LoginPage type='register' />} />
+				<Route
+					path='/register'
+					element={<LoginPage type='register' />}
+				/>
 			</Routes>
 		</>
 	)

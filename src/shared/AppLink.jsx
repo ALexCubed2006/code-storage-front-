@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
-export default function AppLink({ children, authType, className, title }) {
+export default function AppLink({ children, authType, className }) {
 	const navigate = useNavigate()
 
 	// check if user is logged in

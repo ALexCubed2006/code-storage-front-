@@ -1,8 +1,8 @@
 import TopNav from '../components/TopNav/TopNav'
 
-export default function StartPage() {
+export default function ProfilePage() {
 	return (
-		<div className='h-[100vh] w-full flex flex-col'>
+		<div>
 			<TopNav />
 		</div>
 	)

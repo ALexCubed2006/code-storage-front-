@@ -1,0 +1,9 @@
+.box-shadow {
+	box-shadow: 0 0 5px 5px rgba(50, 50, 50, 0.05);
+}
+
+/* FileComponent */
+.grid-marking {
+    display: grid;
+    grid-template-columns: 30% 40% 30%;
+}

@@ -1,10 +1,16 @@
-import ContentContainer from "../components/ContentContainer";
+import ContentContainer from '../components/FileDir/ContentContainer'
+import './Content.css'
 
 export default function Home() {
 	return (
-		<div className='w-full h-full flex'>
-			<div className='w-full h-full flex justify-center items-center p-8'>
-				<ContentContainer />
+		<div className='w-full h-full'>
+			<div className='w-full h-full content-grid-layout'>
+				<div>
+					{/* TODO: add sidebar */}
+				</div>
+				<div className='mx-[5%] my-[2%]'>
+					<ContentContainer />
+				</div>
 			</div>
 		</div>
 	)

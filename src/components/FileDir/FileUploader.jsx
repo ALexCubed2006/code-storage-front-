@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import Button from '../../shared/Button'
+import FileImg from '../../shared/FileImg'
 import { setUploadFile } from '../redux/authSlice'
-import Button from '../shared/Button'
-import FileImg from '../shared/FileImg'
 
 export default function FileUploader() {
 	const acceptedFiles = [
@@ -30,6 +30,7 @@ export default function FileUploader() {
 	const inputRef = useRef(null)
 
 	const dispatch = useDispatch()
+	const token = useSelector((state) => state.auth.token)
 
 	function handleChange(e) {
 		setSelectedFile(e.target.files[0])
@@ -47,7 +48,7 @@ export default function FileUploader() {
 			method: 'POST',
 			body: data,
 			headers: {
-				Authorization: `Bearer ${localStorage.getItem('token') ?? ''}`,
+				Authorization: `Bearer ${token}`,
 			},
 		})
 		const uploaded = await res.json()
@@ -58,7 +59,9 @@ export default function FileUploader() {
 		}
 		setUploadedFile(uploaded)
 		dispatch(
-			setUploadFile({ file: { id: uploaded.id, name: uploaded.fileName } }),
+			setUploadFile({
+				file: { id: uploaded.id, name: uploaded.fileName },
+			}),
 		)
 
 		// clear inputs

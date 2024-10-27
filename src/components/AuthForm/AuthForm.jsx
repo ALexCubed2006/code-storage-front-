@@ -2,8 +2,9 @@ import axios from 'axios'
 import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { setToken } from '../redux/auth.slice'
-import AppLink from '../shared/AppLink'
+import { setToken } from '../../redux/auth.slice'
+import AppLink from '../../shared/AppLink'
+import './AuthForm.css'
 
 export default function AuthForm({ type }) {
 	// TODO: maybe refactor
@@ -12,6 +13,7 @@ export default function AuthForm({ type }) {
 	const name = useRef(null)
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
+
 
 	// if you already have token
 	// you will be redirected
@@ -49,29 +51,35 @@ export default function AuthForm({ type }) {
 
 	return (
 		<div className='flex w-full h-[100vh] justify-center items-center box-border'>
-			<div className='flex flex-col items-center w-[500px] h-[550px] m-auto border border-zinc-500 rounded-xl absolute'>
+			<div className='flex flex-col items-center w-[500px] h-[550px] m-auto border border-zinc-300 rounded-xl absolute form-shadow'>
 				{/* Link to start page */}
 				<Link
 					to='/'
-					className='fixed left-4 top-4 border border-zinc-500 rounded-lg [&>*::before]:text-[24px]'
+					className='fixed left-4 top-4 border border-zinc-300 text-zinc-500 rounded-lg [&>*::before]:text-[24px] hover:border-zinc-700 hover:text-zinc-700 transition-all active:scale-95 active:text-blue-500 active:border-blue-500'
 				>
 					<i className='fi fi-bs-home w-[48px] h-[48px] flex items-center justify-center' />
 				</Link>
 
 				{/* Header of form and links for another form (register or login) */}
-				<div className='p-6 flex items-center justify-center'>
+				<div className='w-full h-[50px] inline-flex items-center justify-center'>
 					{type === 'register' && (
-						<AppLink authType={'redirectLogin'} className='mr-2' title='Login'>
+						<AppLink
+							authType={'redirectLogin'}
+							className='ml-2 inline-flex items-center justify-center h-full hover:text-blue-500 transition-all'
+							title='Login'
+						>
 							<i className='fi fi-bs-angle-left' />
+							Register
 						</AppLink>
 					)}
-					<span>{type === 'register' ? 'Register' : 'Login'}</span>
+
 					{type === 'login' && (
 						<AppLink
 							authType={'redirectRegister'}
-							className='ml-2'
+							className='ml-2 inline-flex items-center justify-center h-full hover:text-blue-500 transition-all'
 							title='Register'
 						>
+							Login
 							<i className='fi fi-bs-angle-right' />
 						</AppLink>
 					)}
@@ -109,7 +117,7 @@ export default function AuthForm({ type }) {
 				{type === 'login' ? (
 					<button
 						onClick={() => login(email.current.value, password.current.value)}
-						className='border-b-2 border-zinc-500 transition-[border] duration-300 hover:border-zinc-500 p-1 m-2 focus:outline-none'
+						className='border-b-2 border-zinc-500 hover:text-blue-500 active:scale-95 p-1 m-2 focus:outline-none'
 					>
 						Login
 					</button>
@@ -122,7 +130,7 @@ export default function AuthForm({ type }) {
 								name.current.value,
 							)
 						}
-						className='border-b-2 border-zinc-500 transition-[border] duration-300 hover:border-zinc-500 p-1 m-2 focus:outline-none'
+						className='border-b-2 border-zinc-500 hover:text-blue-500 active:scale-95 p-1 m-2 focus:outline-none'
 					>
 						Register
 					</button>
