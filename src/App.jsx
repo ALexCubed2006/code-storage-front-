@@ -3,6 +3,8 @@ import { useLayoutEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
+import { API_URL_ACCESS, API_URL_UPLOAD } from './config'
+import { AuthContext, LangContext, ThemeContext } from './context'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import ProfilePage from './pages/ProfilePage'
@@ -18,14 +20,17 @@ function App() {
 		// get user data and set it in redux store
 		async function getUserData() {
 			if (!token) return
-			const res = await axios.get(
-				'http://localhost:3456/api/access/isAuthorized',
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
+			const res = await axios.get(`${API_URL_ACCESS}/isAuthorized`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
 				},
-			)
+			})
+
+			const files = await axios.get(`${API_URL_UPLOAD}/getUserFileIds`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
 
 			if (res.data?.error) {
 				console.warn(res.data.error)
@@ -33,21 +38,12 @@ function App() {
 				dispatch(logOut())
 				return null
 			}
+			dispatch(setUserData(res.data))
 
-			const { name, email, role, groupRole } = res.data
-
-			if (name && email) {
-				dispatch(setUserData({ name, email, role, groupRole }))
+			if (files.data) {
+				const filesIdArray = files.data.map((file) => file.id)
+				dispatch(setUserFilesId({ filesIdArray }))
 			}
-			const files = await axios.get(
-				'http://localhost:3456/api/upload/getUserFileIds',
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				},
-			)
-			dispatch(setUserFilesId({ files: files.data }))
 		}
 		getUserData()
 	}, [token])
@@ -56,16 +52,25 @@ function App() {
 	// TODO: add more routes
 	return (
 		<>
-			<Routes>
-				<Route path='/' element={<StartPage />} />
-				<Route path='/home' element={<HomePage />} />
-				<Route path='/profile' element={<ProfilePage />} />
-				<Route path='/login' element={<LoginPage type={'login'} />} />
-				<Route
-					path='/register'
-					element={<LoginPage type='register' />}
-				/>
-			</Routes>
+			<ThemeContext.Provider value={'light'}>
+				<LangContext.Provider value={'en'}>
+					<AuthContext.Provider value={!!token}>
+						<Routes>
+							<Route path='/' element={<StartPage />} />
+							<Route path='/home' element={<HomePage />} />
+							<Route path='/profile' element={<ProfilePage />} />
+							<Route
+								path='/login'
+								element={<LoginPage type={'login'} />}
+							/>
+							<Route
+								path='/register'
+								element={<LoginPage type='register' />}
+							/>
+						</Routes>
+					</AuthContext.Provider>
+				</LangContext.Provider>
+			</ThemeContext.Provider>
 		</>
 	)
 }

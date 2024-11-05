@@ -23,7 +23,7 @@ export const authSlice = createSlice({
 
 		// setting user files
 		setUserFilesId: (state, action) => {
-			state.fileIds = action.payload.files.map((file) => file.id)
+			state.fileIds = action.payload.filesIdArray
 		},
 		setUploadFileId: (state, action) => {
 			state.fileIds.push(action.payload.file.id)

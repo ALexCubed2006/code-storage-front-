@@ -1,13 +1,15 @@
-import { useCallback, useRef, useState } from 'react'
+import { useContext, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import AppLink from '../../shared/AppLink'
 import Menu from '../Menu/Menu'
 import './TopNav.css'
+import { AuthContext } from '../../context'
 
 export default function TopNav() {
 	console.log('[TopNav] rendered')
-	const isLoggedIn = !!useSelector((state) => state.auth.email)
+	
+	const isLoggedIn = useContext(AuthContext)
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 	const navRef = useRef(null)
 
@@ -76,7 +78,10 @@ export default function TopNav() {
 					</button>
 				</div>
 				{isMenuOpen && (
-					<Menu setIsMenuOpen={setIsMenuOpen} isLoggedIn={isLoggedIn} />
+					<Menu
+						setIsMenuOpen={setIsMenuOpen}
+						isLoggedIn={isLoggedIn}
+					/>
 				)}
 			</div>
 		</div>

@@ -1,15 +1,35 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import AppLink from '../../shared/AppLink'
+import Modal from '../../shared/Modal'
+import FileUploader from '../FileDir/FileUploader'
+import './Menu.css'
 
 export default function Menu({ setIsMenuOpen, isLoggedIn }) {
+	const [isFileModalOpen, setIsFileModalOpen] = useState(false)
+
+	console.log('[Menu] rendered')
 	function handleClick() {
 		setIsMenuOpen(false)
+		setIsFileModalOpen(false)
 	}
 	return (
 		<div
-			className='fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-20'
+			className='grid-menu-marking fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-20'
 			onClick={() => setIsMenuOpen(false)}
 		>
+			<div className='flex items-center justify-center'>
+				<Modal
+					className=''
+					modalClassName={
+						'h-full w-full z-50 flex items-center justify-center'
+					}
+					isModalOpen={isFileModalOpen}
+					onClose={() => setIsFileModalOpen(false)}
+				>
+					<FileUploader />
+				</Modal>
+			</div>
 			<div
 				className='flex flex-col items-center w-1/5 h-screen absolute right-0 bg-zinc-50 z-50'
 				onClick={(e) => e.stopPropagation()}
@@ -62,6 +82,12 @@ export default function Menu({ setIsMenuOpen, isLoggedIn }) {
 					>
 						Community
 					</Link>
+					<button
+						className='w-full h-12 bg-zinc-100 hover:bg-zinc-200 transition-all rounded active:text-blue-500 active:scale-95 flex items-center justify-center mb-2 shadow'
+						onClick={() => setIsFileModalOpen((prev) => !prev)}
+					>
+						Send File
+					</button>
 				</div>
 			</div>
 		</div>

@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import { API_URL_AUTH } from '../../config'
 import { setToken } from '../../redux/auth.slice'
 import AppLink from '../../shared/AppLink'
 import './AuthForm.css'
@@ -13,7 +14,6 @@ export default function AuthForm({ type }) {
 	const name = useRef(null)
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
-
 
 	// if you already have token
 	// you will be redirected
@@ -29,7 +29,7 @@ export default function AuthForm({ type }) {
 	// then set token in redux store
 	// and redirect to main page
 	const login = async (email, password, name = null) => {
-		const res = await axios.post(`http://localhost:3456/api/auth/${type}`, {
+		const res = await axios.post(`${API_URL_AUTH}/${type}`, {
 			email,
 			password,
 			name,
@@ -116,7 +116,9 @@ export default function AuthForm({ type }) {
 				{/* Submit button */}
 				{type === 'login' ? (
 					<button
-						onClick={() => login(email.current.value, password.current.value)}
+						onClick={() =>
+							login(email.current.value, password.current.value)
+						}
 						className='border-b-2 border-zinc-500 hover:text-blue-500 active:scale-95 p-1 m-2 focus:outline-none'
 					>
 						Login

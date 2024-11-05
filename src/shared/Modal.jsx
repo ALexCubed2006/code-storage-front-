@@ -1,16 +1,21 @@
-export default function Modal({ children, isModalOpen, onClose }) {
+export default function Modal({
+	children,
+	isModalOpen,
+	setModalClose,
+	className,
+	modalClassName,
+}) {
 	// TODO: add animation
 	// TODO: add close button
 	return (
 		<div
-			className={
-				isModalOpen
-					? 'h-screen w-screen fixed top-0 left-0 bg-black bg-opacity-50 z-50 flex items-center justify-center'
-					: 'hidden'
-			}
-			onClick={onClose}
+			className={isModalOpen ? modalClassName : 'hidden'}
+			onClick={setModalClose}
 		>
-			<div onClick={(e) => e.stopPropagation()}>{children}</div>
+			{/* FIXME: fix styles */}
+			<div onClick={(e) => e.stopPropagation()} className={className}>
+				{children}
+			</div>
 		</div>
 	)
 }

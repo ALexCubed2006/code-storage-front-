@@ -1,16 +1,18 @@
 import axios from 'axios'
+import { memo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { API_URL_UPLOAD } from '../../config'
 import { setUploadedFile } from '../../redux/file.slice'
 import FileImg from './FileImg'
 import FileTxt from './FileTxt'
 import './Styles.css'
 
-export default function FileComponent({ file }) {
+const FileComponent = memo(({ file }) => {
 	console.log('[FileComponent] rendered')
 
 	const dispatch = useDispatch()
 	const token = useSelector((state) => state.auth.token)
-	const storeUploadedFiles = useSelector((state) => state.file.uploadedFiles)
+	let localDownloadedFile = null
 
 	const codeFileTypes = [
 		'txt',
@@ -37,23 +39,21 @@ export default function FileComponent({ file }) {
 
 	// download file from server
 	// and open it in new window
-	async function handleReview(file) {
-		// FIXME: СДАЛАТЬ ПРОВЕРКУ СТОРА
-		// FIXME: ЕСЛИ ФАЙЛ УЖЕ СКАЧАН, ОТКРЫВАТЬ ЕГО В НОВОМ ОКНЕ ВЗЯВ ИЗ СТОРА
-		// FIXME: ИНАЧЕ ЗАГРУЗИТЬ НОВЫЙ ФАЙЛ И ОТКРЫВАТЬ В НОВОМ ОКНЕ
-		storeUploadedFiles.forEach((f) => {
-			console.log(f.id, file.id)
-			if (f.id === file.id) {
-				console.log('file already downloaded')
-				openFile(f)
-				return null
-			}
-			console.log('11111111111111111')
-		})
+	const handleReview = useCallback(async function (file) {
+		if (localDownloadedFile) {
+			console.log(
+				'[FileComponent] handleReview - local',
+				localDownloadedFile,
+			)
+			openFile(localDownloadedFile)
+			return null
+		}
+		console.log('[FileComponent] handleReview')
+
 		// get file from server
-		console.log('download', file)
+		console.log('[handleReview] download', file)
 		const uploadedFile = await axios.post(
-			`http://localhost:3456/api/upload/getFile`,
+			`${API_URL_UPLOAD}/getFile`,
 			{
 				fileName: file.fileInfo + '-' + file.name,
 				id: file.id,
@@ -73,6 +73,8 @@ export default function FileComponent({ file }) {
 		openFile(uploadedFile)
 
 		// set downloaded file in redux store
+
+		localDownloadedFile = uploadedFile
 		dispatch(
 			setUploadedFile({
 				file: {
@@ -86,8 +88,7 @@ export default function FileComponent({ file }) {
 		)
 
 		return null
-		// FIXME: ПЕРЕДЕЛАТЬ ЧТОБ НОРМАЛЬНО РАБОТАЛО
-	}
+	}, [])
 
 	async function handleDownload(file) {
 		console.log('download', file)
@@ -162,4 +163,6 @@ export default function FileComponent({ file }) {
 			</div>
 		</div>
 	)
-}
+})
+
+export default FileComponent

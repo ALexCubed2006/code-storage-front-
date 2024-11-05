@@ -1,10 +1,12 @@
 import { useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { API_URL_UPLOAD } from '../../config'
+import { setUploadedFile } from '../../redux/file.slice'
 import Button from '../../shared/Button'
 import FileImg from '../../shared/FileImg'
-import { setUploadFile } from '../redux/authSlice'
 
 export default function FileUploader() {
+	// TODO: redo design
 	const acceptedFiles = [
 		'.js',
 		'.ts',
@@ -25,7 +27,7 @@ export default function FileUploader() {
 		'.svg',
 	]
 	const [selectedFile, setSelectedFile] = useState(null)
-	const [uploadedFile, setUploadedFile] = useState(null)
+	const [uploadedFileState, setUploadedFileState] = useState(null)
 	const [drug, setDrug] = useState(false)
 	const inputRef = useRef(null)
 
@@ -44,7 +46,7 @@ export default function FileUploader() {
 		const data = new FormData()
 		data.append('file', selectedFile)
 
-		const res = await fetch('http://localhost:3456/api/upload/file', {
+		const res = await fetch(`${API_URL_UPLOAD}/file`, {
 			method: 'POST',
 			body: data,
 			headers: {
@@ -57,9 +59,9 @@ export default function FileUploader() {
 			console.warn('Error uploading file')
 			return
 		}
-		setUploadedFile(uploaded)
+		setUploadedFileState(uploaded)
 		dispatch(
-			setUploadFile({
+			setUploadedFile({
 				file: { id: uploaded.id, name: uploaded.fileName },
 			}),
 		)
@@ -94,7 +96,7 @@ export default function FileUploader() {
 
 	return (
 		<div className='flex items-center justify-center bg-white rounded-2xl'>
-			<div className='m-auto p-6 border border-zinc-500 rounded-2xl flex w-[800px] h-[600px]'>
+			<div className='m-auto p-6 border border-zinc-500 rounded-2xl flex w-[80%] h-[60%]'>
 				<div className='flex flex-col items-center pr-4'>
 					<Button
 						onClick={() => inputRef.current.click()}
