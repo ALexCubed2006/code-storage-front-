@@ -4,6 +4,7 @@ const initialState = {
 	name: null,
 	email: null,
 	role: 'GUEST',
+	phoneNumber: null,
 	groupRole: null,
 	token: localStorage.getItem('token'),
 	fileIds: [],
@@ -17,6 +18,7 @@ export const authSlice = createSlice({
 		setUserData: (state, action) => {
 			state.name = action.payload.name
 			state.email = action.payload.email
+			state.phoneNumber = action.payload.phoneNumber
 			state.role = action.payload.role
 			state.groupRole = action.payload.groupRole
 		},
@@ -39,6 +41,12 @@ export const authSlice = createSlice({
 			state = initialState
 			localStorage.removeItem('token')
 		},
+
+		// changing user data
+		changeUserData: (state, action) => {
+			console.log(action.payload)
+			state[action.payload.type] = action.payload.value
+		},
 	},
 })
 
@@ -49,6 +57,7 @@ export const {
 	setUploadFileId,
 	setToken,
 	logOut,
+	changeUserData,
 } = authSlice.actions
 
 export default authSlice.reducer

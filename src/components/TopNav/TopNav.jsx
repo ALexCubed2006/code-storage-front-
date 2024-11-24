@@ -71,7 +71,7 @@ export default function TopNav() {
 				</div>
 				<div className='w-full h-full flex items-center justify-end'>
 					<button
-						className='h-full [&>*]:text-3xl [&>*]:text-zinc-500 [&>*]:hover:text-black hover:bg-zinc-100 px-4 active:bg-zinc-200 [&>*]:active:scale-95'
+						className='h-full [&>*]:text-3xl [&>*]:text-zinc-500 [&>*]:hover:text-blue-500 hover:bg-zinc-100 px-4 active:bg-zinc-200 [&>*]:active:scale-95'
 						onClick={handleMenuOpen}
 					>
 						<i className='fi fi-bs-menu-burger w-[48px] h-[48px] flex items-center justify-center' />

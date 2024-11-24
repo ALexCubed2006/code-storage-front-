@@ -9,6 +9,7 @@ export default {
 		},
 		fontFamily: {
 			'verdana': ['Verdana', 'Tahoma', 'sans-serif'],
+			'mono': [ 'Monaco', 'monospace'],
 		},
 	},
 	plugins: [],

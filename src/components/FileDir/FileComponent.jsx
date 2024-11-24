@@ -127,7 +127,7 @@ const FileComponent = memo(({ file }) => {
 	}
 
 	return (
-		<div className='w-full h-auto border border-zinc-300 hover:border-zinc-500 hover:shadow-md transition-all grid-marking items-center p-2'>
+		<div className='w-full h-auto border border-zinc-300 hover:border-zinc-500 hover:shadow-md transition-all grid-marking items-center p-1'>
 			<div>
 				<p>{file.name}</p>
 				{/* <p>{fileUploadedAtFormatted}</p> */}

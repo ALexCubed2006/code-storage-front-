@@ -3,7 +3,6 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
 	files: [],
 	uploadedFiles: [],
-	uploadedAmount: 0,
 }
 
 export const fileSlice = createSlice({
@@ -26,6 +25,11 @@ export const fileSlice = createSlice({
 	},
 })
 
-export const { setFiles, setUploadedFiles, setUploadedFile, addUploadedAmount } = fileSlice.actions
+export const {
+	setFiles,
+	setUploadedFiles,
+	setUploadedFile,
+	addUploadedAmount,
+} = fileSlice.actions
 
 export default fileSlice.reducer

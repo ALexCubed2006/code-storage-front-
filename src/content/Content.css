@@ -2,3 +2,8 @@
     display: grid;
     grid-template-columns: 25% 75%;
 }
+
+.profile-grid-name-marking {
+    display: grid;
+    grid-template-columns: 20% 80%;
+}
