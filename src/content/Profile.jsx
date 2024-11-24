@@ -1,8 +1,9 @@
 import axios from 'axios'
 import { useLayoutEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { API_URL_ACCESS, API_URL_CHANGE_DATA } from '../config'
-import { changeUserData } from '../redux/auth.slice'
+import { changeUserData, logOut } from '../redux/auth.slice'
 import EditableTextField from '../shared/EditableTextField'
 import './Content.css'
 
@@ -89,9 +90,11 @@ export default function Profile() {
 		editProfile('email', values.email)
 	}
 
+	const navigate = useNavigate()
 	function handleLogout() {
-		localStorage.removeItem('token')
+		setEditMode(false)
 		dispatch(logOut())
+		navigate('/')
 	}
 
 	return (
@@ -140,6 +143,8 @@ export default function Profile() {
 						>
 							{name}
 						</EditableTextField>
+
+						{/* TODO: add role change selector */}
 						<EditableTextField
 							type={'role'}
 							editMode={editMode}
@@ -150,7 +155,20 @@ export default function Profile() {
 					</div>
 				</div>
 
-				<div className='w-full flex justify-end'>
+				<div className='w-full flex justify-between'>
+					{editMode ? (
+						<button
+							className='flex items-center justify-center'
+							onClick={handleLogout}
+						>
+							<span className='px-8 p-2 h-12 bg-red-100 hover:bg-red-300 transition-all rounded active:text-red-500 active:scale-95 inline-flex items-center justify-center mb-2 shadow'>
+								Logout
+								<i className='fi fi-rs-exit flex items-center justify-center ml-2' />
+							</span>
+						</button>
+					) : (
+						''
+					)}
 					{editMode ? (
 						<div className='flex justify-end items-center'>
 							<button

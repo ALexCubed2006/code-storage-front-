@@ -38,8 +38,12 @@ export const authSlice = createSlice({
 
 		// removing token from redux store and log out the user
 		logOut: (state) => {
-			state = initialState
 			localStorage.removeItem('token')
+			state = {
+				...initialState,
+				token: null,
+			}
+			return state
 		},
 
 		// changing user data

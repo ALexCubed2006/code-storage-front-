@@ -1,14 +1,13 @@
 import { useContext, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { AuthContext } from '../../context'
 import AppLink from '../../shared/AppLink'
 import Menu from '../Menu/Menu'
 import './TopNav.css'
-import { AuthContext } from '../../context'
 
 export default function TopNav() {
 	console.log('[TopNav] rendered')
-	
+
 	const isLoggedIn = useContext(AuthContext)
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 	const navRef = useRef(null)
@@ -27,7 +26,13 @@ export default function TopNav() {
 				}
 				ref={navRef}
 			>
-				<div className='w-full h-full flex items-center'>test</div>
+				<div className='w-full h-full flex items-center text-4xl text-zinc-700 hover:bg-zinc-100 '>
+					<i className='fi fi-rr-folder m-4' />
+					<div className='text-xl font-bold'>
+						<p>Code</p>
+						<p>Storage</p>
+					</div>
+				</div>
 				<div className='flex justify-center items-center text-zinc-700'>
 					<Link
 						to='/home'
