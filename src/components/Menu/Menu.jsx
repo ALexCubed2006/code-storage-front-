@@ -88,6 +88,14 @@ export default function Menu({ setIsMenuOpen, isLoggedIn }) {
 					>
 						Send File
 					</button>
+
+					<Link
+						to='/about'
+						className='w-full h-12 bg-zinc-100 hover:bg-zinc-200 transition-all rounded active:text-blue-500 active:scale-95 flex items-center justify-center mb-2 shadow'
+						onClick={() => setIsMenuOpen(false)}
+					>
+						About
+					</Link>
 				</div>
 			</div>
 		</div>

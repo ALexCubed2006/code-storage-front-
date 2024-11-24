@@ -5,11 +5,14 @@ import { Route, Routes } from 'react-router-dom'
 import './App.css'
 import { API_URL_ACCESS, API_URL_UPLOAD } from './config'
 import { AuthContext, LangContext, ThemeContext } from './context'
+import AboutPage from './pages/AboutPage'
+import ErrorPage from './pages/ErrorPage'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import ProfilePage from './pages/ProfilePage'
 import StartPage from './pages/StartPage'
 import { logOut, setUserData, setUserFilesId } from './redux/auth.slice'
+import MaterialsUsed from './pages/MaterialsUsed'
 
 function App() {
 	console.log('[App] rendered')
@@ -67,6 +70,9 @@ function App() {
 								path='/register'
 								element={<LoginPage type='register' />}
 							/>
+							<Route path='/about' element={<AboutPage />} />
+							<Route path='/used' element={<MaterialsUsed/>} />
+							<Route path='*' element={<ErrorPage />} />
 						</Routes>
 					</AuthContext.Provider>
 				</LangContext.Provider>

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { API_URL_UPLOAD } from '../../config'
 import { setUploadedFile } from '../../redux/file.slice'
 import Button from '../../shared/Button'
-import FileImg from '../../shared/FileImg'
 
 export default function FileUploader() {
 	// TODO: redo design
@@ -95,12 +94,12 @@ export default function FileUploader() {
 	}
 
 	return (
-		<div className='flex items-center justify-center bg-white rounded-2xl'>
-			<div className='m-auto p-6 border border-zinc-500 rounded-2xl flex w-[80%] h-[60%]'>
+		<div className='flex items-center justify-center bg-white rounded-2xl w-full h-full shadow-lg'>
+			<div className='m-auto p-6 border border-zinc-400 rounded-2xl flex'>
 				<div className='flex flex-col items-center pr-4'>
 					<Button
 						onClick={() => inputRef.current.click()}
-						className='m-2 p-2 border-2 border-zinc-500 rounded-lg'
+						className='w-full h-12 bg-zinc-50 hover:bg-zinc-100 transition-all rounded active:text-blue-500 active:scale-95 flex items-center justify-center mb-2 p-2 shadow'
 					>
 						Select file
 					</Button>
@@ -114,34 +113,51 @@ export default function FileUploader() {
 					/>
 					<Button
 						onClick={clearSelectedFile}
-						className='m-2 p-2 border-2 border-zinc-500 rounded-lg'
+						className='w-full h-12 bg-zinc-50 hover:bg-zinc-100 transition-all rounded active:text-red-500 active:scale-95 flex items-center justify-center mb-2 p-2 shadow'
 					>
 						Clear
 					</Button>
 					<Button
 						onClick={handleUpload}
-						className='m-2 p-2 border-2 border-zinc-500 rounded-lg'
+						className='w-full h-12 bg-zinc-50 hover:bg-zinc-100 transition-all rounded active:text-lime-500 active:scale-95 flex items-center justify-center mb-2 p-2 shadow'
 					>
 						Upload
 					</Button>
 				</div>
 
-				{/* TODO: refactor */}
 				{drug ? (
 					<div
 						onDragStart={(e) => dragStartHandler(e)}
 						onDragLeave={(e) => dragLeaveHandler(e)}
 						onDragOver={(e) => dragStartHandler(e)}
 						onDrop={(e) => onDropHandler(e)}
-						className='w-full h-full border-4 transition-colors duration-500 border-blue-300 border-dashed rounded-lg p-6 flex-grow'
+						className='w-[70vh] h-[70vh] border-4 transition-colors duration-500 border-blue-300 border-dashed rounded-lg p-6 flex-grow'
 					>
 						{
 							// if file selected
 							// show it in field
 							selectedFile ? (
-								<FileImg file={selectedFile} />
+								<div className='flex flex-col p-2 text-zinc'>
+									<p className='m-y2'>
+										File selected: {selectedFile.name}
+									</p>
+									<p className='m-y2'>
+										Type: {selectedFile.type}
+									</p>
+									<p className='m-y2'>
+										Size: {selectedFile.size} bytes
+									</p>
+									<p className='m-y2'>
+										Last modified:{' '}
+										{new Date(
+											selectedFile.lastModified,
+										).toUTCString()}
+									</p>
+								</div>
 							) : (
-								<p>Drag and drop your files here</p>
+								<p className='text-zinc-400'>
+									Drop your file here
+								</p>
 							)
 						}
 					</div>
@@ -150,9 +166,11 @@ export default function FileUploader() {
 						onDragStart={(e) => dragStartHandler(e)}
 						onDragLeave={(e) => dragLeaveHandler(e)}
 						onDragOver={(e) => dragStartHandler(e)}
-						className='w-full h-full border-4 transition-colors duration-500 border-zinc-300 border-dashed rounded-lg p-6'
+						className='w-[70vh] h-[70vh] border-4 transition-colors duration-500 border-zinc-300 border-dashed rounded-lg p-6'
 					>
-						<p>Drop your files here</p>
+						<p className='text-zinc-400'>
+							Drag & Drop your files here
+						</p>
 					</div>
 				)}
 			</div>
