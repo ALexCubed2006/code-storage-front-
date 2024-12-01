@@ -1,11 +1,10 @@
 import { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { API_URL_UPLOAD } from '../../config'
+import { API_URL_UPLOAD, API_URL_UPLOAD_TYPES } from '../../config'
 import { setUploadedFile } from '../../redux/file.slice'
 import Button from '../../shared/Button'
 
 export default function FileUploader() {
-	// TODO: redo design
 	const acceptedFiles = [
 		'.js',
 		'.ts',
@@ -45,7 +44,7 @@ export default function FileUploader() {
 		const data = new FormData()
 		data.append('file', selectedFile)
 
-		const res = await fetch(`${API_URL_UPLOAD}/file`, {
+		const res = await fetch(API_URL_UPLOAD_TYPES.file, {
 			method: 'POST',
 			body: data,
 			headers: {

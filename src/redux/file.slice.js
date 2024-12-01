@@ -22,6 +22,14 @@ export const fileSlice = createSlice({
 		addUploadedAmount: (state, action) => {
 			state.uploadedAmount += action.payload.amount
 		},
+		updateIsPublic: (state, action) => {
+			state.files = state.files.map((file) => {
+				if (file.id === action.payload.fileId) {
+					return { ...file, isPublic: action.payload.isPublic }
+				}
+				return file
+			})
+		},
 	},
 })
 
@@ -30,6 +38,7 @@ export const {
 	setUploadedFiles,
 	setUploadedFile,
 	addUploadedAmount,
+	updateIsPublic,
 } = fileSlice.actions
 
 export default fileSlice.reducer

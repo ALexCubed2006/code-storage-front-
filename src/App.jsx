@@ -3,16 +3,22 @@ import { useLayoutEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
-import { API_URL_ACCESS, API_URL_UPLOAD } from './config'
+import {
+	API_URL_ACCESS_TYPES,
+	API_URL_UPLOAD_TYPES,
+	APP_THEMES,
+	LANG,
+	ROUTES,
+} from './config'
 import { AuthContext, LangContext, ThemeContext } from './context'
 import AboutPage from './pages/AboutPage'
 import ErrorPage from './pages/ErrorPage'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
+import MaterialsUsed from './pages/MaterialsUsed'
 import ProfilePage from './pages/ProfilePage'
 import StartPage from './pages/StartPage'
 import { logOut, setUserData, setUserFilesId } from './redux/auth.slice'
-import MaterialsUsed from './pages/MaterialsUsed'
 
 function App() {
 	console.log('[App] rendered')
@@ -23,13 +29,13 @@ function App() {
 		// get user data and set it in redux store
 		async function getUserData() {
 			if (!token) return
-			const res = await axios.get(`${API_URL_ACCESS}/isAuthorized`, {
+			const res = await axios.get(API_URL_ACCESS_TYPES.authorization, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
 			})
 
-			const files = await axios.get(`${API_URL_UPLOAD}/getUserFileIds`, {
+			const files = await axios.get(API_URL_UPLOAD_TYPES.getUserFiles, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
@@ -51,28 +57,38 @@ function App() {
 		getUserData()
 	}, [token])
 
-	// return main routes of app
-	// TODO: add more routes
 	return (
 		<>
-			<ThemeContext.Provider value={'light'}>
-				<LangContext.Provider value={'en'}>
+			<ThemeContext.Provider value={APP_THEMES.light}>
+				<LangContext.Provider value={LANG.default}>
 					<AuthContext.Provider value={!!token}>
 						<Routes>
-							<Route path='/' element={<StartPage />} />
-							<Route path='/home' element={<HomePage />} />
-							<Route path='/profile' element={<ProfilePage />} />
 							<Route
-								path='/login'
-								element={<LoginPage type={'login'} />}
+								path={ROUTES.default}
+								element={<StartPage />}
+							/>
+							<Route path={ROUTES.home} element={<HomePage />} />
+							<Route
+								path={ROUTES.profile}
+								element={<ProfilePage />}
 							/>
 							<Route
-								path='/register'
-								element={<LoginPage type='register' />}
+								path={ROUTES.login}
+								element={<LoginPage type={ROUTES.login} />}
 							/>
-							<Route path='/about' element={<AboutPage />} />
-							<Route path='/used' element={<MaterialsUsed/>} />
-							<Route path='*' element={<ErrorPage />} />
+							<Route
+								path={ROUTES.register}
+								element={<LoginPage type={ROUTES.register} />}
+							/>
+							<Route
+								path={ROUTES.about}
+								element={<AboutPage />}
+							/>
+							<Route
+								path={ROUTES.materialsUsed}
+								element={<MaterialsUsed />}
+							/>
+							<Route path={ROUTES.all} element={<ErrorPage />} />
 						</Routes>
 					</AuthContext.Provider>
 				</LangContext.Provider>

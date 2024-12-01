@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useLayoutEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { API_URL_ACCESS, API_URL_CHANGE_DATA } from '../config'
+import { API_URL_ACCESS_TYPES, API_URL_CHANGE_DATA, ROUTES } from '../config'
 import { changeUserData, logOut } from '../redux/auth.slice'
 import EditableTextField from '../shared/EditableTextField'
 import './Content.css'
@@ -35,7 +35,7 @@ export default function Profile() {
 
 	async function editProfile(type, value) {
 		const access = await axios.post(
-			`${API_URL_ACCESS}/editProfile`,
+			API_URL_ACCESS_TYPES.editProfile,
 			{
 				type: type,
 				value: value,
@@ -94,7 +94,7 @@ export default function Profile() {
 	function handleLogout() {
 		setEditMode(false)
 		dispatch(logOut())
-		navigate('/')
+		navigate(ROUTES.default)
 	}
 
 	return (

@@ -38,7 +38,7 @@ export default function AboutPage() {
 						target='_blank'
 						className='underline text-blue-500'
 					>
-						click
+						ALexCubed2006
 					</a>
 				</p>
 				<p>
@@ -48,7 +48,17 @@ export default function AboutPage() {
 						target='_blank'
 						className='underline text-blue-500'
 					>
-						click
+						alexcubed
+					</a>
+				</p>
+				<p>
+					Vercel:
+					<a
+						href='https://vercel.com/alexcubeds-projects'
+						target='_blank'
+						className='underline text-blue-500'
+					>
+						alexcubed
 					</a>
 				</p>
 				<p>-----</p>

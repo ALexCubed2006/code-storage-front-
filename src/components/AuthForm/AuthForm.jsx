@@ -2,13 +2,12 @@ import axios from 'axios'
 import { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { API_URL_AUTH } from '../../config'
+import { API_URL_AUTH, ROUTES } from '../../config'
 import { setToken } from '../../redux/auth.slice'
 import AppLink from '../../shared/AppLink'
 import './AuthForm.css'
 
 export default function AuthForm({ type }) {
-	// TODO: maybe refactor
 	const email = useRef(null)
 	const password = useRef(null)
 	const name = useRef(null)
@@ -21,7 +20,7 @@ export default function AuthForm({ type }) {
 	const token = localStorage.getItem('token')
 	useEffect(() => {
 		if (token) {
-			navigate('/')
+			navigate(ROUTES.default)
 		}
 	}, [token])
 
@@ -41,7 +40,7 @@ export default function AuthForm({ type }) {
 		if (res.data.token) {
 			localStorage.setItem('token', res.data.token)
 			dispatch(setToken({ token: res.data.token }))
-			navigate('/')
+			navigate(ROUTES.default)
 		}
 
 		email = null

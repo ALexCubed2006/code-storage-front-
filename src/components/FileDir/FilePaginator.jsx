@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux'
 import FileComponent from './FileComponent'
 
 export default function FilePaginator() {
+	console.log('[FilePaginator] rendered')
 	const files = useSelector((state) => state.file.files)
 
 	return (

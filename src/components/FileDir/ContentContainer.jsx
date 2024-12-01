@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { API_URL_UPLOAD } from '../../config'
+import { API_URL_UPLOAD_TYPES } from '../../config'
 import { AuthContext } from '../../context'
 import { setFiles } from '../../redux/file.slice'
 import FilePaginator from './FilePaginator'
@@ -23,7 +23,7 @@ export default function ContentContainer() {
 
 	// fetch files from server
 	const uploadFiles = async (page = 1, count = 10) => {
-		const res = await axios.get(`${API_URL_UPLOAD}/getUserFiles`, {
+		const res = await axios.get(API_URL_UPLOAD_TYPES.getUserFiles, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
@@ -55,6 +55,7 @@ export default function ContentContainer() {
 		}
 	}, [])
 
+	// FIXME: fix pagination bug
 	function handleSkipNext() {
 		console.log('[ContentContainer] handleSkipNext', fileCount)
 		if ((page + 1) * 10 > fileCount) {

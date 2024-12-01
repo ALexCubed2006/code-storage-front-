@@ -21,9 +21,7 @@ export default function Menu({ setIsMenuOpen, isLoggedIn }) {
 			<div className='flex items-center justify-center'>
 				<Modal
 					className=''
-					modalClassName={
-						'h-full w-full z-50 flex items-center justify-center'
-					}
+					modalClassName='h-full w-full z-50 flex items-center justify-center'
 					isModalOpen={isFileModalOpen}
 					onClose={() => setIsFileModalOpen(false)}
 				>

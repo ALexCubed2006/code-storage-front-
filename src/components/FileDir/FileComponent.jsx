@@ -1,9 +1,10 @@
 import axios from 'axios'
 import { memo, useCallback, useState } from 'react'
 import { createPortal } from 'react-dom'
+import toast, { Toaster } from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
-import { API_URL_UPLOAD } from '../../config'
-import { setUploadedFile } from '../../redux/file.slice'
+import { API_URL_UPLOAD_TYPES, APP_URL } from '../../config'
+import { setUploadedFile, updateIsPublic } from '../../redux/file.slice'
 import Modal from '../../shared/Modal'
 import FileImg from './FileImg'
 import FileTxt from './FileTxt'
@@ -33,31 +34,20 @@ const FileComponent = memo(({ file }) => {
 	const imgFileTypes = ['png', 'jpg', 'jpeg', 'gif', 'svg']
 	const fileType = file.name.split('.').pop()
 
-	const fileUploadedAt = new Date(file.uploadedAt)
-	const fileUploadedAtFormatted = fileUploadedAt.toLocaleDateString('en-US', {
-		year: 'numeric',
-		month: 'long',
-		day: 'numeric',
-	})
+	const [isMenuOpen, setIsMenuOpen] = useState(false)
 
 	// download file from server
 	// and open it in new window
 	const handleReview = useCallback(async function (file) {
 		if (deleted) return
+
 		if (localDownloadedFile) {
-			console.log(
-				'[FileComponent] handleReview - local',
-				localDownloadedFile,
-			)
 			openFile(localDownloadedFile)
 			return null
 		}
-		console.log('[FileComponent] handleReview')
 
-		// get file from server
-		console.log('[handleReview] download', file)
 		const uploadedFile = await axios.post(
-			`${API_URL_UPLOAD}/getFile`,
+			API_URL_UPLOAD_TYPES.getFile,
 			{
 				fileName: file.fileInfo + '-' + file.name,
 				id: file.id,
@@ -97,7 +87,7 @@ const FileComponent = memo(({ file }) => {
 	async function handleDownload(file) {
 		if (deleted) return
 		const uploadedFile = await axios.post(
-			`${API_URL_UPLOAD}/getFile`,
+			API_URL_UPLOAD_TYPES.getFile,
 			{
 				fileName: file.fileInfo + '-' + file.name,
 				id: file.id,
@@ -131,7 +121,7 @@ const FileComponent = memo(({ file }) => {
 	async function deleteFile(file) {
 		if (deleted) return
 		setIsDeleteModalOpen(false)
-		const res = await axios.delete(`${API_URL_UPLOAD}/deleteFile`, {
+		const res = await axios.delete(API_URL_UPLOAD_TYPES.deleteFile, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
@@ -149,14 +139,13 @@ const FileComponent = memo(({ file }) => {
 		return null
 	}
 
+	// open file in new window TODO: refactor
 	function openFile(uploadedFile) {
 		console.log('[FileComponent] openFile')
 		const fileExtension = uploadedFile.data.fileExtension
 		// open code file in new window
 		if (codeFileTypes.includes(fileExtension)) {
-			const fileWindow = window.open(
-				'http://localhost:5173/uploadedCodeFile',
-			)
+			const fileWindow = window.open(`${APP_URL}/uploadedCodeFile`)
 
 			uploadedFile.data.file.split('\n').forEach((line) => {
 				fileWindow.document.write(line + '<br>')
@@ -165,9 +154,7 @@ const FileComponent = memo(({ file }) => {
 
 		// open image file in new window
 		if (imgFileTypes.includes(fileExtension)) {
-			const fileWindow = window.open(
-				'http://localhost:5173/uploadedImgFile',
-			)
+			const fileWindow = window.open(`${APP_URL}/uploadedImgFile`)
 
 			fileWindow.document.write(
 				`<img src="data:image/${fileExtension};base64,${uploadedFile.data.file}" />`,
@@ -176,6 +163,34 @@ const FileComponent = memo(({ file }) => {
 
 		setDeleted(true)
 		return null
+	}
+
+	async function handleSetIsPublic(file) {
+		console.log(file)
+		const res = await axios.put(
+			API_URL_UPLOAD_TYPES.publicFile,
+			{
+				fileId: file.id,
+				isPublic: !file.isPublic,
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			},
+		)
+		if (res.data?.error) {
+			console.warn(res.data.error)
+			return null
+		}
+
+		dispatch(updateIsPublic({ fileId: file.id, isPublic: !file.isPublic }))
+
+		if (!file.isPublic) {
+			toast.success('File is now public')
+		} else {
+			toast.success('File is now private')
+		}
 	}
 
 	return (
@@ -194,62 +209,96 @@ const FileComponent = memo(({ file }) => {
 			)}
 
 			<div className='flex justify-end items-center [&>*]:text-2xl'>
-				<button
-					className='flex items-center justify-center w-10 h-10 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-blue-500'
-					onClick={() => handleReview(file)}
-					disabled={deleted}
-				>
-					<i className='fi fi-rs-eye w-6 h-6 flex items-center justify-center' />
-				</button>
-				<button
-					className='flex items-center justify-center w-10 h-10 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-green-500'
-					onClick={() => handleDownload(file)}
-					disabled={deleted}
-				>
-					<i className='fi fi-sr-download w-6 h-6 flex items-center justify-center' />
-				</button>
-				<button
-					className='flex items-center justify-center w-10 h-10 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-red-500'
-					onClick={() => handleDelete(file)}
-					disabled={deleted}
-				>
-					<i className='fi fi-rs-trash w-6 h-6 flex items-center justify-center' />
-
-					{createPortal(
-						<Modal
-							isModalOpen={isDeleteModalOpen}
-							setModalClose={() => {
-								setIsDeleteModalOpen((prev) => !prev)
+				{isMenuOpen ? (
+					<>
+						<button
+							className='flex items-center justify-center w-10 h-10 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-indigo-500'
+							onClick={() => {
+								setIsMenuOpen(false)
+								handleSetIsPublic(file)
 							}}
-							modalClassName='flex items-center justify-center z-50 absolute top-0 left-0 w-screen h-screen'
-							className='flex flex-col items-center justify-center bg-white z-50 p-6 border border-zinc-300 rounded-lg shadow-lg'
 						>
-							<div className='flex flex-col items-center justify-center'>
-								<p className='mb-4'>
-									Are you sure you want to delete this file?
-								</p>
-								<div className='flex justify-end w-full'>
-									<button
-										onClick={() => deleteFile(file)}
-										className='flex items-center justify-center p-4 ml-2 shadow hover:bg-red-200 rounded-lg transition-all active:scale-95 active:text-red-500'
-									>
-										Delete
-									</button>
-									<button
-										onClick={() =>
-											setIsDeleteModalOpen(false)
-										}
-										className='flex items-center justify-center p-4 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-blue-500'
-									>
-										Cancel
-									</button>
-								</div>
-							</div>
-						</Modal>,
-						document.body,
-					)}
-				</button>
+							<i className='fi fi-sr-globe w-6 h-6 flex items-center justify-center' />
+						</button>
+						<button
+							className='flex items-center justify-center w-10 h-10 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-blue-500'
+							onClick={() => {
+								setIsMenuOpen(false)
+								handleReview(file)
+							}}
+							disabled={deleted}
+						>
+							<i className='fi fi-rs-eye w-6 h-6 flex items-center justify-center' />
+						</button>
+						<button
+							className='flex items-center justify-center w-10 h-10 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-green-500'
+							onClick={() => {
+								setIsMenuOpen(false)
+								handleDownload(file)
+							}}
+							disabled={deleted}
+						>
+							<i className='fi fi-sr-download w-6 h-6 flex items-center justify-center' />
+						</button>
+						<button
+							className='flex items-center justify-center w-10 h-10 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-red-500'
+							onClick={() => {
+								setIsMenuOpen(false)
+								handleDelete(file)
+							}}
+							disabled={deleted}
+						>
+							<i className='fi fi-rs-trash w-6 h-6 flex items-center justify-center' />
+						</button>
+						<button
+							className='flex items-center justify-center w-6 h-10 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-zinc-500'
+							onClick={() => setIsMenuOpen(false)}
+						>
+							<i className='fi fi-sr-menu-dots-vertical w-2 h-6 flex items-center justify-center' />
+						</button>
+					</>
+				) : (
+					<button
+						className='flex items-center justify-center w-10 h-10 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-blue-500'
+						onClick={() => setIsMenuOpen(true)}
+					>
+						<i className='fi fi-sr-menu-dots w-6 h-6 flex items-center justify-center' />
+					</button>
+				)}
 			</div>
+			{createPortal(
+				<Modal
+					isModalOpen={isDeleteModalOpen}
+					setModalClose={() => {
+						setIsDeleteModalOpen((prev) => !prev)
+					}}
+					modalClassName='flex items-center justify-center z-50 absolute top-0 left-0 w-screen h-screen'
+					className='flex flex-col items-center justify-center bg-white z-50 p-6 border border-zinc-300 rounded-lg shadow-lg'
+				>
+					<div className='flex flex-col items-center justify-center'>
+						<p className='mb-4'>
+							Are you sure you want to delete this file?
+						</p>
+						<div className='flex justify-end w-full'>
+							<button
+								onClick={() => deleteFile(file)}
+								className='flex items-center justify-center p-4 ml-2 shadow hover:bg-red-200 rounded-lg transition-all active:scale-95 active:text-red-500'
+							>
+								Delete
+							</button>
+							<button
+								onClick={() => setIsDeleteModalOpen(false)}
+								className='flex items-center justify-center p-4 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-blue-500'
+							>
+								Cancel
+							</button>
+						</div>
+					</div>
+				</Modal>,
+				document.body,
+			)}
+
+			<Toaster />
 		</div>
 	)
 })

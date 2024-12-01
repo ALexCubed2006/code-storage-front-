@@ -36,6 +36,12 @@ export default [
 			],
 			'@typescript-eslint/explicit-module-boundary-types': 'error',
 			'@typescript-eslint/prop-types': 'error',
+
+			'no-var': 'error',
+			'no-undef': 'warn',
+			'prefer-const': 'warn',
+			'react/prop-types': 'off',
+			'react/react-in-jsx-scope': 'off',
 		},
 	},
 ]
