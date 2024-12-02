@@ -3,14 +3,18 @@ import { memo, useCallback, useState } from 'react'
 import { createPortal } from 'react-dom'
 import toast, { Toaster } from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
-import { API_URL_UPLOAD_TYPES, APP_URL } from '../../config'
-import { setUploadedFile, updateIsPublic } from '../../redux/file.slice'
+import { API_URL_UPLOAD_TYPES, APP_URL, FILE_TYPES, TABS } from '../../config'
+import {
+	deleteFromFavorites,
+	setUploadedFile,
+	updateIsPublic,
+} from '../../redux/file.slice'
 import Modal from '../../shared/Modal'
 import FileImg from './FileImg'
 import FileTxt from './FileTxt'
 import './Styles.css'
 
-const FileComponent = memo(({ file }) => {
+const FileComponent = memo(({ file, tab }) => {
 	console.log('[FileComponent] rendered')
 
 	const dispatch = useDispatch()
@@ -18,20 +22,6 @@ const FileComponent = memo(({ file }) => {
 	let localDownloadedFile = null
 	const [deleted, setDeleted] = useState(false)
 
-	const codeFileTypes = [
-		'txt',
-		'js',
-		'css',
-		'html',
-		'json',
-		'jsx',
-		'md',
-		'sass',
-		'scss',
-		'ts',
-		'tsx',
-	]
-	const imgFileTypes = ['png', 'jpg', 'jpeg', 'gif', 'svg']
 	const fileType = file.name.split('.').pop()
 
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -144,7 +134,7 @@ const FileComponent = memo(({ file }) => {
 		console.log('[FileComponent] openFile')
 		const fileExtension = uploadedFile.data.fileExtension
 		// open code file in new window
-		if (codeFileTypes.includes(fileExtension)) {
+		if (FILE_TYPES.code.includes(fileExtension)) {
 			const fileWindow = window.open(`${APP_URL}/uploadedCodeFile`)
 
 			uploadedFile.data.file.split('\n').forEach((line) => {
@@ -153,7 +143,7 @@ const FileComponent = memo(({ file }) => {
 		}
 
 		// open image file in new window
-		if (imgFileTypes.includes(fileExtension)) {
+		if (FILE_TYPES.image.includes(fileExtension)) {
 			const fileWindow = window.open(`${APP_URL}/uploadedImgFile`)
 
 			fileWindow.document.write(
@@ -193,16 +183,38 @@ const FileComponent = memo(({ file }) => {
 		}
 	}
 
+	async function handleDeleteFromFavourite(file) {
+		const res = await axios.put(
+			API_URL_UPLOAD_TYPES.deleteFromFavorites,
+			{
+				fileId: file.id,
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			},
+		)
+		if (res.data?.error) {
+			console.warn(res.data.error)
+			return null
+		}
+
+		dispatch(deleteFromFavorites({ fileId: file.id }))
+	}
+
 	return (
 		<div className='w-full h-auto border border-zinc-300 hover:border-zinc-500 hover:shadow-md transition-all grid-marking items-center p-1'>
-			<div>
+			<div className='overflow-hidden'>
 				<p>{file.name}</p>
 				{/* <p>{fileUploadedAtFormatted}</p> */}
 			</div>
 
-			{codeFileTypes.includes(fileType) ? (
+			{FILE_TYPES.code.includes(fileType) ? (
+				// TODO: add code
 				<FileTxt file={file} />
-			) : imgFileTypes.includes(fileType) ? (
+			) : FILE_TYPES.image.includes(fileType) ? (
+				// TODO: add image
 				<FileImg file={file} />
 			) : (
 				<div>test</div>
@@ -211,17 +223,33 @@ const FileComponent = memo(({ file }) => {
 			<div className='flex justify-end items-center [&>*]:text-2xl'>
 				{isMenuOpen ? (
 					<>
+						{tab === TABS.favorite ? (
+							<button
+								className='flex items-center justify-center w-10 h-10 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-red-500 active:bg-red-100'
+								onClick={() => {
+									setIsMenuOpen(false)
+									handleDeleteFromFavourite(file)
+								}}
+							>
+								<i className='fi fi-rr-delete-document w-6 h-6 flex items-center justify-center' />
+							</button>
+						) : (
+							<button
+								className='flex items-center justify-center w-10 h-10 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-indigo-500 active:bg-indigo-100'
+								onClick={() => {
+									setIsMenuOpen(false)
+									handleSetIsPublic(file)
+								}}
+							>
+								{!file.isPublic ? (
+									<i className='fi fi-sr-globe w-6 h-6 flex items-center justify-center' />
+								) : (
+									<i className='fi fi-rr-lock w-6 h-6 flex items-center justify-center' />
+								)}
+							</button>
+						)}
 						<button
-							className='flex items-center justify-center w-10 h-10 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-indigo-500'
-							onClick={() => {
-								setIsMenuOpen(false)
-								handleSetIsPublic(file)
-							}}
-						>
-							<i className='fi fi-sr-globe w-6 h-6 flex items-center justify-center' />
-						</button>
-						<button
-							className='flex items-center justify-center w-10 h-10 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-blue-500'
+							className='flex items-center justify-center w-10 h-10 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-blue-500 active:bg-blue-100'
 							onClick={() => {
 								setIsMenuOpen(false)
 								handleReview(file)
@@ -231,7 +259,7 @@ const FileComponent = memo(({ file }) => {
 							<i className='fi fi-rs-eye w-6 h-6 flex items-center justify-center' />
 						</button>
 						<button
-							className='flex items-center justify-center w-10 h-10 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-green-500'
+							className='flex items-center justify-center w-10 h-10 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-green-500 active:bg-green-100'
 							onClick={() => {
 								setIsMenuOpen(false)
 								handleDownload(file)
@@ -240,16 +268,20 @@ const FileComponent = memo(({ file }) => {
 						>
 							<i className='fi fi-sr-download w-6 h-6 flex items-center justify-center' />
 						</button>
-						<button
-							className='flex items-center justify-center w-10 h-10 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-red-500'
-							onClick={() => {
-								setIsMenuOpen(false)
-								handleDelete(file)
-							}}
-							disabled={deleted}
-						>
-							<i className='fi fi-rs-trash w-6 h-6 flex items-center justify-center' />
-						</button>
+						{tab === TABS.favorite ? (
+							''
+						) : (
+							<button
+								className='flex items-center justify-center w-10 h-10 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-red-500 active:bg-red-100'
+								onClick={() => {
+									setIsMenuOpen(false)
+									handleDelete(file)
+								}}
+								disabled={deleted}
+							>
+								<i className='fi fi-rs-trash w-6 h-6 flex items-center justify-center' />
+							</button>
+						)}
 						<button
 							className='flex items-center justify-center w-6 h-10 ml-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-zinc-500'
 							onClick={() => setIsMenuOpen(false)}

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { API_URL_UPLOAD_TYPES } from '../../config'
+import { API_URL_UPLOAD_TYPES, TABS } from '../../config'
 import { AuthContext } from '../../context'
 import { setFiles } from '../../redux/file.slice'
 import FilePaginator from './FilePaginator'
@@ -17,13 +17,17 @@ export default function ContentContainer() {
 	const [page, setPage] = useState(1)
 	const [prevButtonDisabled, setPrevButtonDisabled] = useState(true)
 	const [nextButtonDisabled, setNextButtonDisabled] = useState(false)
+	const [tab, setTab] = useState(TABS.personal)
+	const [type, setType] = useState(API_URL_UPLOAD_TYPES.getUserFiles)
 
 	console.log('[ContentContainer] rendered component')
 	console.log('[ContentContainer] page', page)
 
 	// fetch files from server
-	const uploadFiles = async (page = 1, count = 10) => {
-		const res = await axios.get(API_URL_UPLOAD_TYPES.getUserFiles, {
+	const uploadFiles = async (type, page = 1, count = 10) => {
+		if(!isLoggedIn) return
+
+		const res = await axios.get(type, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
@@ -46,7 +50,7 @@ export default function ContentContainer() {
 		console.log('[ContentContainer] useEffect')
 		if (!isLoggedIn) return
 
-		uploadFiles()
+		uploadFiles(type)
 
 		console.log('[ContentContainer] useEffect file downloaded')
 
@@ -55,22 +59,40 @@ export default function ContentContainer() {
 		}
 	}, [])
 
+	function uploadFirstPage(type) {
+		console.log('[ContentContainer] uploadFirstPage')
+
+		if (!isLoggedIn) return
+
+		uploadFiles(type)
+
+		setPage(1)
+		setPrevButtonDisabled(true)
+		setNextButtonDisabled(false)
+	}
+
 	// FIXME: fix pagination bug
 	function handleSkipNext() {
 		console.log('[ContentContainer] handleSkipNext', fileCount)
+
+		if (!isLoggedIn) return
+
 		if ((page + 1) * 10 > fileCount) {
 			setNextButtonDisabled(true)
 		}
 		setPrevButtonDisabled(false)
 		setPage((prev) => prev + 1)
 
-		uploadFiles(page + 1)
+		uploadFiles(type, page + 1)
 
 		console.log('[ContentContainer] handleSkipNext file downloaded')
 	}
 
 	function handleSkipPrev() {
 		console.log('[ContentContainer] handleSkipPrev')
+
+		if (!isLoggedIn) return
+
 		if (page < 1) return
 		setNextButtonDisabled(false)
 		setPage((prev) => prev - 1)
@@ -79,24 +101,47 @@ export default function ContentContainer() {
 			setPrevButtonDisabled(true)
 		}
 
-		uploadFiles(page - 1)
+		uploadFiles(type, page - 1)
 	}
 
 	return (
 		<div className='w-full h-full box-border px-8 py-4 border rounded-2xl flex flex-col justify-between border-zinc-300  box-shadow'>
 			<div>
 				<div className='w-full h-[50px] flex items-center justify-between'>
-					<div>
-						{/* TODO: add sort by date */}
-						Last Uploaded
-					</div>
-					<div>
-						{/* TODO: add filter */}
-						div
-					</div>
+					<button
+						className={
+							tab === TABS.personal
+								? 'flex items-center justify-center p-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-blue-500 bg-zinc-200'
+								: 'flex items-center justify-center p-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-blue-500'
+						}
+						onClick={() => {
+							if (tab === TABS.personal) return
+							setTab(TABS.personal)
+							setType(API_URL_UPLOAD_TYPES.getUserFiles)
+							uploadFirstPage(API_URL_UPLOAD_TYPES.getUserFiles)
+						}}
+					>
+						Your files
+					</button>
+					<div>{/* TODO: implement search */} search</div>
+					<button
+						className={
+							tab === TABS.favorite
+								? 'flex items-center justify-center p-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-blue-500 bg-zinc-200'
+								: 'flex items-center justify-center p-2 shadow hover:bg-zinc-200 rounded-lg transition-all active:scale-95 active:text-blue-500'
+						}
+						onClick={() => {
+							if (tab === TABS.favorite) return
+							setTab(TABS.favorite)
+							setType(API_URL_UPLOAD_TYPES.getFavorites)
+							uploadFirstPage(API_URL_UPLOAD_TYPES.getFavorites)
+						}}
+					>
+						Favorite files
+					</button>
 				</div>
 
-				<FilePaginator />
+				<FilePaginator tab={tab} />
 			</div>
 
 			<div className='w-full flex items-center justify-center'>

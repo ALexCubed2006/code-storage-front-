@@ -80,12 +80,17 @@ export default function Menu({ setIsMenuOpen, isLoggedIn }) {
 					>
 						Community
 					</Link>
-					<button
-						className='w-full h-12 bg-zinc-100 hover:bg-zinc-200 transition-all rounded active:text-blue-500 active:scale-95 flex items-center justify-center mb-2 shadow'
-						onClick={() => setIsFileModalOpen((prev) => !prev)}
-					>
-						Send File
-					</button>
+					{isLoggedIn && (
+						<button
+							className='w-full h-12 bg-zinc-100 hover:bg-zinc-200 transition-all rounded active:text-blue-500 active:scale-95 flex items-center justify-center mb-2 shadow'
+							onClick={() => {
+								if (!isLoggedIn) return
+								setIsFileModalOpen((prev) => !prev)
+							}}
+						>
+							Send File
+						</button>
+					)}
 
 					<Link
 						to='/about'

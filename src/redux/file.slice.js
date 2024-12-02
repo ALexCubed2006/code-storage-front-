@@ -30,6 +30,9 @@ export const fileSlice = createSlice({
 				return file
 			})
 		},
+		deleteFromFavorites: (state, action) => {
+			state.files = state.files.filter((file) => file.id !== action.payload.fileId)
+		}
 	},
 })
 
@@ -39,6 +42,7 @@ export const {
 	setUploadedFile,
 	addUploadedAmount,
 	updateIsPublic,
+	deleteFromFavorites,
 } = fileSlice.actions
 
 export default fileSlice.reducer

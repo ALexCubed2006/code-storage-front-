@@ -1,29 +1,11 @@
 import { useRef, useState } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
-import { API_URL_UPLOAD, API_URL_UPLOAD_TYPES } from '../../config'
+import { API_URL_UPLOAD_TYPES, FILE_TYPES } from '../../config'
 import { setUploadedFile } from '../../redux/file.slice'
 import Button from '../../shared/Button'
 
 export default function FileUploader() {
-	const acceptedFiles = [
-		'.js',
-		'.ts',
-		'.jsx',
-		'.tsx',
-		'.css',
-		'.scss',
-		'.sass',
-		'.html',
-		'.htm',
-		'.xml',
-		'.xhtml',
-		'.md',
-		'.png',
-		'.jpg',
-		'.jpeg',
-		'.gif',
-		'.svg',
-	]
 	const [selectedFile, setSelectedFile] = useState(null)
 	const [uploadedFileState, setUploadedFileState] = useState(null)
 	const [drug, setDrug] = useState(false)
@@ -63,6 +45,7 @@ export default function FileUploader() {
 				file: { id: uploaded.id, name: uploaded.fileName },
 			}),
 		)
+		toast.success('File successfully uploaded')
 
 		// clear inputs
 		clearSelectedFile()
@@ -105,7 +88,7 @@ export default function FileUploader() {
 					<input
 						type='file'
 						multiple
-						accept={acceptedFiles.join(', ')}
+						accept={FILE_TYPES.accepted.join(', ')}
 						onChange={handleChange}
 						ref={inputRef}
 						className='m-0 p-0 w-0 h-0 overflow-hidden opacity-0'
@@ -173,6 +156,7 @@ export default function FileUploader() {
 					</div>
 				)}
 			</div>
+			<Toaster />
 		</div>
 	)
 }
