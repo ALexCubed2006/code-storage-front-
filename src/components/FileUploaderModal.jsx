@@ -29,7 +29,7 @@ const FileUploaderModal = ({ type }) => {
 						isModalOpen={isModalOpen}
 						setModalClose={() => setIsModalOpen(false)}
 					>
-						<FileUploader />
+						<FileUploader closeModal={() => setIsModalOpen(false)}/>
 					</Modal>,
 					document.body,
 				)}

@@ -12,6 +12,10 @@ export const fileSlice = createSlice({
 		setFiles: (state, action) => {
 			state.files = action.payload.files
 		},
+		addFile: (state, action) => {
+			if (files.length >= 10) return
+			state.files.push(action.payload.file)
+		},
 		setUploadedFiles: (state, action) => {
 			state.uploadedFiles = action.payload.files
 			state.uploadedAmount = state.uploadedFiles.length
@@ -30,18 +34,27 @@ export const fileSlice = createSlice({
 				return file
 			})
 		},
+		deleteUserFile: (state, action) => {
+			state.files = state.files.filter(
+				(file) => file.id !== action.payload.fileId,
+			)
+		},
 		deleteFromFavorites: (state, action) => {
-			state.files = state.files.filter((file) => file.id !== action.payload.fileId)
-		}
+			state.files = state.files.filter(
+				(file) => file.id !== action.payload.fileId,
+			)
+		},
 	},
 })
 
 export const {
 	setFiles,
+	addFile,
 	setUploadedFiles,
 	setUploadedFile,
 	addUploadedAmount,
 	updateIsPublic,
+	deleteUserFile,
 	deleteFromFavorites,
 } = fileSlice.actions
 

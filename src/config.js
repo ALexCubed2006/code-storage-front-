@@ -55,12 +55,12 @@ export const TABS = {
 }
 
 export const FILE_TYPES = {
+	pages: ['html', 'htm', 'xml', 'xhtml'],
 	image: ['png', 'jpg', 'jpeg', 'gif', 'svg'],
 	code: [
 		'txt',
 		'js',
 		'css',
-		'html',
 		'json',
 		'jsx',
 		'md',
@@ -88,4 +88,9 @@ export const FILE_TYPES = {
 		'.gif',
 		'.svg',
 	],
+}
+
+export const FILE_REVIEW_WINDOWS = {
+	newWindow: 'newWindow',
+	local: 'local',
 }

@@ -15,7 +15,9 @@ export default function ContentContainer() {
 	const controller = new AbortController()
 
 	const [page, setPage] = useState(1)
-	const [prevButtonDisabled, setPrevButtonDisabled] = useState(true)
+	const [prevButtonDisabled, setPrevButtonDisabled] = useState(
+		() => page * 10 > fileCount,
+	)
 	const [nextButtonDisabled, setNextButtonDisabled] = useState(false)
 	const [tab, setTab] = useState(TABS.personal)
 	const [type, setType] = useState(API_URL_UPLOAD_TYPES.getUserFiles)
@@ -25,7 +27,7 @@ export default function ContentContainer() {
 
 	// fetch files from server
 	const uploadFiles = async (type, page = 1, count = 10) => {
-		if(!isLoggedIn) return
+		if (!isLoggedIn) return
 
 		const res = await axios.get(type, {
 			headers: {
@@ -71,9 +73,7 @@ export default function ContentContainer() {
 		setNextButtonDisabled(false)
 	}
 
-	// FIXME: fix pagination bug
 	function handleSkipNext() {
-		console.log('[ContentContainer] handleSkipNext', fileCount)
 
 		if (!isLoggedIn) return
 
@@ -81,9 +81,9 @@ export default function ContentContainer() {
 			setNextButtonDisabled(true)
 		}
 		setPrevButtonDisabled(false)
-		setPage((prev) => prev + 1)
-
 		uploadFiles(type, page + 1)
+
+		setPage((prev) => prev + 1)
 
 		console.log('[ContentContainer] handleSkipNext file downloaded')
 	}

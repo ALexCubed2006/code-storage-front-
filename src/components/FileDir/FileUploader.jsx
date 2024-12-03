@@ -2,10 +2,10 @@ import { useRef, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { API_URL_UPLOAD_TYPES, FILE_TYPES } from '../../config'
-import { setUploadedFile } from '../../redux/file.slice'
+import { addFile, setUploadedFile } from '../../redux/file.slice'
 import Button from '../../shared/Button'
 
-export default function FileUploader() {
+export default function FileUploader({ closeModal = () => {} }) {
 	const [selectedFile, setSelectedFile] = useState(null)
 	const [uploadedFileState, setUploadedFileState] = useState(null)
 	const [drug, setDrug] = useState(false)
@@ -34,6 +34,7 @@ export default function FileUploader() {
 			},
 		})
 		const uploaded = await res.json()
+		console.log(uploaded)
 
 		if (!uploaded) {
 			console.warn('Error uploading file')
@@ -45,10 +46,28 @@ export default function FileUploader() {
 				file: { id: uploaded.id, name: uploaded.fileName },
 			}),
 		)
+		dispatch(
+			addFile({
+				file: {
+					id: uploaded.id,
+					name: uploaded.name,
+					uploadedAt: Date.now(),
+					lastUpdated: Date.now(),
+					isPublic: false,
+					fileInfo:
+						uploaded.fileName.split('-')[0] +
+						'-' +
+						uploaded.fileName.split('-')[1] +
+						'-' +
+						uploaded.fileName.split('-')[2],
+				},
+			}),
+		)
 		toast.success('File successfully uploaded')
 
 		// clear inputs
 		clearSelectedFile()
+		closeModal()
 
 		return null
 	}

@@ -1,5 +1,8 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import { ROUTES } from '../../config'
+import { logOut } from '../../redux/auth.slice'
 import AppLink from '../../shared/AppLink'
 import Modal from '../../shared/Modal'
 import FileUploader from '../FileDir/FileUploader'
@@ -7,6 +10,8 @@ import './Menu.css'
 
 export default function Menu({ setIsMenuOpen, isLoggedIn }) {
 	const [isFileModalOpen, setIsFileModalOpen] = useState(false)
+	const dispatch = useDispatch()
+	const navigate = useNavigate()
 
 	console.log('[Menu] rendered')
 	function handleClick() {
@@ -25,7 +30,7 @@ export default function Menu({ setIsMenuOpen, isLoggedIn }) {
 					isModalOpen={isFileModalOpen}
 					onClose={() => setIsFileModalOpen(false)}
 				>
-					<FileUploader />
+					<FileUploader closeModal={() => setIsFileModalOpen(false)}/>
 				</Modal>
 			</div>
 			<div
@@ -99,6 +104,16 @@ export default function Menu({ setIsMenuOpen, isLoggedIn }) {
 					>
 						About
 					</Link>
+					<button
+						className='w-full h-12 bg-zinc-100 hover:bg-zinc-200 transition-all rounded active:text-blue-500 active:scale-95 flex items-center justify-center mb-2 shadow'
+						onClick={() => {
+							setIsMenuOpen(false)
+							dispatch(logOut())
+							navigate(ROUTES.default)
+						}}
+					>
+						Log Out
+					</button>
 				</div>
 			</div>
 		</div>

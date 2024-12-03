@@ -49,10 +49,27 @@ function App() {
 			}
 			dispatch(setUserData(res.data))
 
-			if (files.data) {
-				const filesIdArray = files.data.map((file) => file.id)
-				dispatch(setUserFilesId({ filesIdArray }))
+			const fileIds = await axios.get(
+				API_URL_UPLOAD_TYPES.getUserFileIds,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				},
+			)
+
+			if (fileIds.data?.error) {
+				console.warn(fileIds.data.error)
+				localStorage.removeItem('token')
+				dispatch(logOut())
+				return null
 			}
+
+			dispatch(
+				setUserFilesId({
+					filesIdArray: fileIds.data.map((file) => file.id),
+				}),
+			)
 		}
 		getUserData()
 	}, [token])
