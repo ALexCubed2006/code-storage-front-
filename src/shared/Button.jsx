@@ -1,6 +1,4 @@
 export default function Button({ children, onClick, className = null }) {
-	// TODO: refactor
-	// TODO: create lil ui kit
 	return (
 		<button
 			className={

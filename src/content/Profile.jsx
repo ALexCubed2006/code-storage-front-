@@ -2,7 +2,12 @@ import axios from 'axios'
 import { useLayoutEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { API_URL_ACCESS_TYPES, API_URL_CHANGE_DATA, ROUTES } from '../config'
+import {
+	API_URL_ACCESS_TYPES,
+	API_URL_CHANGE_DATA,
+	ROLES,
+	ROUTES,
+} from '../config'
 import { changeUserData, logOut } from '../redux/auth.slice'
 import EditableTextField from '../shared/EditableTextField'
 import './Content.css'
@@ -144,14 +149,35 @@ export default function Profile() {
 							{name}
 						</EditableTextField>
 
-						{/* TODO: add role change selector */}
-						<EditableTextField
-							type={'role'}
-							editMode={editMode}
-							setValues={setValues}
+						<select
+							className={
+								editMode
+									? 'my-1 p-2 w-full h-auto shadow-sm rounded-s border border-zinc-200 block'
+									: 'my-1 p-2 w-full h-auto shadow-sm rounded-s border border-zinc-200 bg-zinc-100 block text-zinc-500'
+							}
+							disabled={!editMode}
+							onChange={(e) => {
+								setValues({
+									...values,
+									role: e.target.value,
+								})
+							}}
 						>
-							{role}
-						</EditableTextField>
+							<option value={role}>{role}</option>
+							{ROLES.admin !== role && (
+								<option value={ROLES.admin}>
+									{ROLES.admin}
+								</option>
+							)}
+							{ROLES.user !== role && (
+								<option value={ROLES.user}>{ROLES.user}</option>
+							)}
+							{ROLES.guest !== role && (
+								<option value={ROLES.guest}>
+									{ROLES.guest}
+								</option>
+							)}
+						</select>
 					</div>
 				</div>
 

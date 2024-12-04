@@ -6,6 +6,7 @@ export const API_URL_UPLOAD = API_URL + '/upload'
 export const API_URL_ACCESS = API_URL + '/access'
 export const API_URL_REDIRECT = API_URL + '/redirect'
 export const API_URL_CHANGE_DATA = API_URL + '/changeData'
+export const API_URL_SEARCH = API_URL + '/search'
 
 export const API_URL_ACCESS_TYPES = {
 	authorization: API_URL_ACCESS + '/isAuthorized',
@@ -24,6 +25,12 @@ export const API_URL_UPLOAD_TYPES = {
 	addToFavorites: API_URL_UPLOAD + '/addToFavorites',
 	getFavorites: API_URL_UPLOAD + '/getFavoriteFiles',
 	deleteFromFavorites: API_URL_UPLOAD + '/removeFromFavorites',
+}
+
+export const API_URL_SEARCH_TYPES = {
+	searchFiles: API_URL_SEARCH + '/searchFiles',
+	searchUsers: API_URL_SEARCH + '/searchUsers',
+	searchGroups: API_URL_SEARCH + '/searchGroups',
 }
 
 export const APP_THEMES = {
@@ -52,6 +59,13 @@ export const ROUTES = {
 export const TABS = {
 	personal: 'personal',
 	favorite: 'favorite',
+	search: 'search',
+}
+
+export const ROLES = {
+	user: 'USER',
+	admin: 'ADMIN',
+	guest: 'GUEST',
 }
 
 export const FILE_TYPES = {
